@@ -1,0 +1,31 @@
+Usage
+=====
+要 ActionController#current_user
+
+rails g role_manager:install user
+rake db:migrate
+
+Example
+=======
+
+class User < ActiveRecord::Base
+  acts_as_role
+  include RoleMangerMethods
+end
+
+user = User.new
+user.has_authority? :register #=> true/false
+
+class FooController < ActionController::Base
+  role_filter :destroy #=> 全アクション
+  role_filter :register, :only => 'index' #=> indexアクションのみ
+end
+
+# Roleに対してFuncの権限を与える
+r = RoleManager::Role.first
+r.add_authority RoleManager::Function.first.code
+r.save
+
+# UserにRoleを与える
+u.role = r
+u.save
